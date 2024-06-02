@@ -19,3 +19,11 @@ variable "azure_devops_org" {
     description = "A URL in the format https://dev.azure.com/org-name"
     type = string
 }
+
+## Resource Groups
+
+variable "rg_location" {
+    description = "The location in which to create resource groups"
+    type = string
+    default = "East US"
+}
