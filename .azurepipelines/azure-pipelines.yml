@@ -9,6 +9,7 @@ resources:
       name: andrewtyped/aztf.pipelinetemplates
       type: github
       ref: refs/heads/main
+      endpoint: github.com_andrewtyped
 
 extends:
   template: /tf/tf-azure-pipeline.yml@TfTemplates
