@@ -1,1 +1,4 @@
+src/.terraform
+src/*.lock.hcl
+
 backend.config
