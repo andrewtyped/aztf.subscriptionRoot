@@ -1,5 +1,5 @@
 terraform {
-  # Sensitive backend configuration will be provided as file. See https://developer.hashicorp.com/terraform/language/settings/backends/configuration#file
+  # Sensitive backend configuration will be provided as file or environment variables. See https://developer.hashicorp.com/terraform/language/settings/backends/configuration#file
   backend "azurerm" {
     storage_account_name = "sargroot1tf"
     container_name       = "tfstate-container"
