@@ -82,7 +82,7 @@ resource "azurerm_storage_account" "tfstate" {
 }
 
 # Grant current SPN access to storage account so it can create a container
-resource "azurerm_role_assignment" "deployer_spn_rg_access" {
+resource "azurerm_role_assignment" "current_spn_storage_account_access" {
     principal_id = azuread_service_principal.deployer_spn.object_id
     principal_type = "ServicePrincipal"
     scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}"
@@ -97,7 +97,7 @@ resource "azurerm_storage_container" "tfstate_container" {
 }
 
 # Grant deployer SPN access to storage account
-resource "azurerm_role_assignment" "deployer_spn_rg_access" {
+resource "azurerm_role_assignment" "deployer_spn_storage_container_access" {
     principal_id = azuread_service_principal.deployer_spn.object_id
     principal_type = "ServicePrincipal"
     scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}/blobServices/default/containers/${azurerm_storage_container.tfstate_container.name}"
