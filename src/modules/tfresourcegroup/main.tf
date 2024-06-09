@@ -92,7 +92,7 @@ resource "azurerm_role_assignment" "current_spn_storage_account_access" {
 # Container for tfstate
 resource "azurerm_storage_container" "tfstate_container" {
     name = "tfstate-container"
-    storage_account_name = azurerm_storage_account.tfstate
+    storage_account_name = azurerm_storage_account.tfstate.name
     container_access_type = "private"
 }
 

@@ -19,4 +19,4 @@ extends:
     DeploymentEnvironment: TfEnv
     VariableGroups:
       - aztf.subscriptionroot
-    TfPlanApplyArgs: " -var 'azure_tenant_id=$ENV:AZURE_TENANTID' -var 'azure_devops_org=$(System.CollectionUri)' -var 'azure_devops_pat=$(Azure_DevOps_Pat)' "
+    TfPlanApplyArgs: -var "azure_tenant_id=$ENV:AZURE_TENANTID" -var 'azure_devops_org=$(System.CollectionUri)' -var 'azure_devops_pat=$(Azure_DevOps_Pat)'
