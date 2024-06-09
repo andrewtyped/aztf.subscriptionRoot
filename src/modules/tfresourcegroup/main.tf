@@ -5,11 +5,17 @@ locals {
   }
 }
 
+data "azurerm_client_config" "current" {}
+
 # Resource Group
 resource "azurerm_resource_group" "tfmanaged" {
   name = "rg-${var.rg_topic}-${var.rg_increment}"
   location = var.rg_location
   tags = local.tags
+}
+
+locals {
+    resource_group_scope = "/subscriptions/${azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.tfmanaged.name}"
 }
 
 # Service Principal for Accessing tfstate
@@ -33,6 +39,14 @@ resource "azuread_application_federated_identity_credential" "deployer_spn_cred"
     subject = "TODO"
 }
 
+# Grant deployer SPN access to resource group
+resource "azurerm_role_assignment" "deployer_spn_rg_access" {
+    principal_id = azuread_service_principal.deployer_spn.object_id
+    principal_type = "ServicePrincipal"
+    scope = "${locals.resource_group_scope}"
+    role_definition_name = "Contributor"
+    skip_service_principal_aad_check = true
+}
 
 # Storage Account for tfstate
 resource "azurerm_storage_account" "tfstate" {
@@ -67,8 +81,25 @@ resource "azurerm_storage_account" "tfstate" {
     }
 }
 
+# Grant current SPN access to storage account so it can create a container
+resource "azurerm_role_assignment" "deployer_spn_rg_access" {
+    principal_id = azuread_service_principal.deployer_spn.object_id
+    principal_type = "ServicePrincipal"
+    scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}"
+    role_definition_name = "Storage Blob Data Contributor"
+}
+
+# Container for tfstate
 resource "azurerm_storage_container" "tfstate_container" {
     name = "tfstate-container"
     storage_account_name = azurerm_storage_account.tfstate
     container_access_type = "private"
+}
+
+# Grant deployer SPN access to storage account
+resource "azurerm_role_assignment" "deployer_spn_rg_access" {
+    principal_id = azuread_service_principal.deployer_spn.object_id
+    principal_type = "ServicePrincipal"
+    scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}/blobServices/default/containers/${azurerm_storage_container.tfstate_container.name}"
+    role_definition_name = "Storage Blob Data Contributor"
 }
