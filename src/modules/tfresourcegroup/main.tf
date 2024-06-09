@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "tfmanaged" {
 }
 
 locals {
-    resource_group_scope = "/subscriptions/${azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.tfmanaged.name}"
+    resource_group_scope = "/subscriptions/${data.azurerm_client_config.current.subscription_id}/resourceGroups/${azurerm_resource_group.tfmanaged.name}"
 }
 
 # Service Principal for Accessing tfstate
