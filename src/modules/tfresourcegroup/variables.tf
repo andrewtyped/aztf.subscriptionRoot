@@ -2,13 +2,13 @@
 
 variable "environment" {
     description = "The name of the environment (dev, qa, prod) where the resource is deployed"
-    type = "string"
+    type = string
     default = "dev"
 }
 
 variable "department" {
     description = "The name of the business dept owning the resource"
-    type = "string"
+    type = string
     default = "someco"
 }
 
