@@ -30,14 +30,14 @@ resource "azuread_service_principal" "deployer_spn" {
     app_role_assignment_required = false
 }
 
-resource "azuread_application_federated_identity_credential" "deployer_spn_cred" {
-    application_id = azuread_application_registration.deployer_app.id
-    display_name = "${azuread_application_registration.deployer_app}-deployer-cred"
-    description = "Used to deploy resources to ${azurerm_resource_group.tfmanaged.name} with Terraform."
-    audiences = ["TODO"]
-    issuer = "TODO"
-    subject = "TODO"
-}
+# resource "azuread_application_federated_identity_credential" "deployer_spn_cred" {
+#     application_id = azuread_application_registration.deployer_app.id
+#     display_name = "${azuread_application_registration.deployer_app}-deployer-cred"
+#     description = "Used to deploy resources to ${azurerm_resource_group.tfmanaged.name} with Terraform."
+#     audiences = ["TODO"]
+#     issuer = "TODO"
+#     subject = "TODO"
+# }
 
 # Grant deployer SPN access to resource group
 resource "azurerm_role_assignment" "deployer_spn_rg_access" {
