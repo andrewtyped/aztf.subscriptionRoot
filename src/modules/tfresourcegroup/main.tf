@@ -86,6 +86,8 @@ resource "azurerm_role_assignment" "current_spn_storage_account_access" {
     principal_type = "ServicePrincipal"
     scope = "${local.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_account.tfstate.name}"
     role_definition_name = "Storage Blob Data Contributor"
+
+    depends_on = [ azurerm_storage_account.tfstate ]
 }
 
 # Container for tfstate
@@ -103,4 +105,8 @@ resource "azurerm_role_assignment" "deployer_spn_storage_container_access" {
     principal_type = "ServicePrincipal"
     scope = "${local.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_account.tfstate.name}/blobServices/default/containers/${azurerm_storage_container.tfstate_container.name}"
     role_definition_name = "Storage Blob Data Contributor"
+
+    depends_on = [ azurerm_storage_container.tfstate_container ]
 }
+
+# TODO: This is not working. Getting all sorts of odd errors about being unable to access tfstate, tfstate not found... not sure what is happening.
