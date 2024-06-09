@@ -43,7 +43,7 @@ resource "azuread_service_principal" "deployer_spn" {
 resource "azurerm_role_assignment" "deployer_spn_rg_access" {
     principal_id = azuread_service_principal.deployer_spn.object_id
     principal_type = "ServicePrincipal"
-    scope = "${locals.resource_group_scope}"
+    scope = "${local.resource_group_scope}"
     role_definition_name = "Contributor"
     skip_service_principal_aad_check = true
 }
@@ -85,7 +85,7 @@ resource "azurerm_storage_account" "tfstate" {
 resource "azurerm_role_assignment" "current_spn_storage_account_access" {
     principal_id = azuread_service_principal.deployer_spn.object_id
     principal_type = "ServicePrincipal"
-    scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}"
+    scope = "${local.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}"
     role_definition_name = "Storage Blob Data Contributor"
 }
 
@@ -100,6 +100,6 @@ resource "azurerm_storage_container" "tfstate_container" {
 resource "azurerm_role_assignment" "deployer_spn_storage_container_access" {
     principal_id = azuread_service_principal.deployer_spn.object_id
     principal_type = "ServicePrincipal"
-    scope = "${locals.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}/blobServices/default/containers/${azurerm_storage_container.tfstate_container.name}"
+    scope = "${local.resource_group_scope}/providers/Microsoft.Storage/storageAccounts/${azurerm_storage_container.tfstate_container.name}/blobServices/default/containers/${azurerm_storage_container.tfstate_container.name}"
     role_definition_name = "Storage Blob Data Contributor"
 }
