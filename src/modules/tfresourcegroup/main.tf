@@ -108,5 +108,3 @@ resource "azurerm_role_assignment" "deployer_spn_storage_container_access" {
 
     depends_on = [ azurerm_storage_container.tfstate_container ]
 }
-
-# TODO: This is not working. Getting all sorts of odd errors about being unable to access tfstate, tfstate not found... not sure what is happening.
