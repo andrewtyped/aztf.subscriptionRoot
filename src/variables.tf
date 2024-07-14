@@ -20,6 +20,12 @@ variable "azure_devops_org" {
     type = string
 }
 
+variable "azure-devops-project-name" {
+    description = "The name of the Azure DevOps team project where a workload identity federation service connection will be created"
+    type = string
+    default = "asbarg01"
+}
+
 ## Resource Groups
 
 variable "rg_location" {

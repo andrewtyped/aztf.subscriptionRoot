@@ -30,14 +30,33 @@ resource "azuread_service_principal" "deployer_spn" {
     app_role_assignment_required = false
 }
 
-# resource "azuread_application_federated_identity_credential" "deployer_spn_cred" {
-#     application_id = azuread_application_registration.deployer_app.id
-#     display_name = "${azuread_application_registration.deployer_app}-deployer-cred"
-#     description = "Used to deploy resources to ${azurerm_resource_group.tfmanaged.name} with Terraform."
-#     audiences = ["TODO"]
-#     issuer = "TODO"
-#     subject = "TODO"
-# }
+data "azuredevops_project" "current" {
+  name = var.azure-devops-project-name
+}
+
+resource "azuredevops_serviceendpoint_azurerm" "deployer_service_connection" {
+  project_id                             = data.azuredevops_project.current.id
+  service_endpoint_name                  = azuread_application_registration.deployer_app.display_name
+  description                            = "Managed by Terraform"
+  service_endpoint_authentication_scheme = "WorkloadIdentityFederation"
+  credentials {
+    serviceprincipalid = azuread_service_principal.deployer_spn.client_id
+  }
+  azurerm_spn_tenantid      = var.azure_tenant_id
+  azurerm_subscription_id   = data.azuredevops_project.current.subscription_id
+  azurerm_subscription_name = data.azuredevops_project.current.subscription_id
+}
+
+# Create a federated credential that can be used in an Azure DevOps Service Connection 
+resource "azuread_application_federated_identity_credential" "deployer_spn_cred" {
+    application_id = azuredevops_serviceendpoint_azurerm.deployer_service_connection.service_principal_id
+    display_name = "${azuread_application_registration.deployer_app.display_name}-deployer-cred"
+    description = "Used to deploy resources to ${azurerm_resource_group.tfmanaged.name} with Terraform."
+    audiences = [var.azure-devops-oidc-token-audience]
+    issuer = azuredevops_serviceendpoint_azurerm.deployer_service_connection.workload_identity_federation_issuer
+    subject = azuredevops_serviceendpoint_azurerm.deployer_service_connection.workload_identity_federation_subject
+}
+
 
 # Grant deployer SPN access to resource group
 resource "azurerm_role_assignment" "deployer_spn_rg_access" {
