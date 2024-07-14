@@ -50,7 +50,7 @@ resource "azuredevops_serviceendpoint_azurerm" "deployer_service_connection" {
 # Create a federated credential that can be used in an Azure DevOps Service Connection 
 resource "azuread_application_federated_identity_credential" "deployer_spn_cred" {
     application_id = azuread_application_registration.deployer_app.id
-    display_name = "${azuread_application_registration.deployer_app.display_name}-deployer-cred"
+    display_name = "${azuread_application_registration.deployer_app.display_name}-cred"
     description = "Used to deploy resources to ${azurerm_resource_group.tfmanaged.name} with Terraform."
     audiences = [var.azure-devops-oidc-token-audience]
     issuer = azuredevops_serviceendpoint_azurerm.deployer_service_connection.workload_identity_federation_issuer
