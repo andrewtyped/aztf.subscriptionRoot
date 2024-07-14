@@ -43,8 +43,8 @@ resource "azuredevops_serviceendpoint_azurerm" "deployer_service_connection" {
     serviceprincipalid = azuread_service_principal.deployer_spn.client_id
   }
   azurerm_spn_tenantid      = var.azure_tenant_id
-  azurerm_subscription_id   = data.azuredevops_project.current.subscription_id
-  azurerm_subscription_name = data.azuredevops_project.current.subscription_id
+  azurerm_subscription_id   = data.azurerm_client_config.current.subscription_id
+  azurerm_subscription_name = data.azurerm_client_config.current.subscription_id
 }
 
 # Create a federated credential that can be used in an Azure DevOps Service Connection 
